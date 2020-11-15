@@ -15,10 +15,18 @@ class BookSearch extends Component {
 
     queryHandler(query) {
         BooksAPI.search(query)
-            .then(books => books ? this.setState({ books }) : [])
-            .catch(() => alert('Something went wrong! Please try again!'))
+            .then(books => {
+                if (books && books.error) {
+                    this.setState({ books: [] })
+                }
+                else {
+                    this.setState({ books })
+                }
+            })
         this.setState({ query })
     }
+
+
 
     bookShelfHandler(book, shelf) {
         BooksAPI.update(book, shelf)
@@ -32,7 +40,7 @@ class BookSearch extends Component {
 
 
         return (
-            <div className="search-books">
+            <div className="search-books" >
                 <div className="search-books-bar">
                     <Link className="close-search" to={{ pathname: '/' }}>Close</Link>
                     <div className="search-books-input-wrapper">
@@ -45,7 +53,7 @@ class BookSearch extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {!books.error
+                        {books && !books.error
                             ? books.map((book) => (
                                 <li key={book.id}>
                                     <BookList book={book} bookShelfHandler={this.bookShelfHandler.bind(this)}

@@ -18,9 +18,12 @@ class BookLibrary extends Component {
 
     bookShelfHandler(book, shelf) {
         BooksAPI.update(book, shelf)
-            .then(() => shelf !== 'none' ? alert(`${book.title} has been moved, Reload! to check.`) : null)
+        book.shelf = shelf
+        BooksAPI.update(book, shelf)
+            .then(this.setState((prevState) => ({
+                books: [...prevState.books.filter((x) => x.id !== book.id), book],
+            })))
             .catch(() => alert('Something went wrong! Please try again!'));
-
     }
 
     render() {

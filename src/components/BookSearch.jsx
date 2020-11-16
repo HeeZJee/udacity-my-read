@@ -26,12 +26,17 @@ class BookSearch extends Component {
         this.setState({ query })
     }
 
-
-
     bookShelfHandler(book, shelf) {
+        book.shelf = shelf
         BooksAPI.update(book, shelf)
-            .then(() => shelf !== 'none' ? alert(`${book.title} has been added to your shelf!`) : null)
+            .then(() => {
+                this.setState((prevState) => ({
+                    books: [...prevState.books.filter((x) => x.id !== book.id), book],
+                }))
+                if (shelf !== 'none') { alert(`${book.title} has been added to your shelf!`) }
+            })
             .catch(() => alert('Something went wrong! Please try again!'));
+
     }
 
 

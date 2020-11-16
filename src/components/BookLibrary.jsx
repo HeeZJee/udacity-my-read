@@ -17,7 +17,6 @@ class BookLibrary extends Component {
     }
 
     bookShelfHandler(book, shelf) {
-        BooksAPI.update(book, shelf)
         book.shelf = shelf
         BooksAPI.update(book, shelf)
             .then(this.setState((prevState) => ({

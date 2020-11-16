@@ -31,7 +31,7 @@ class BookSearch extends Component {
         BooksAPI.update(book, shelf)
             .then(() => {
                 this.setState((prevState) => ({
-                    books: [...prevState.books.filter((x) => x.id !== book.id), book],
+                    books: [...prevState.books],
                 }))
                 if (shelf !== 'none') { alert(`${book.title} has been added to your shelf!`) }
             })

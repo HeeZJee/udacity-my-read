@@ -9,9 +9,7 @@ export default class BookShelf extends Component {
 
 
     render() {
-        const { books, name, resetMain } = this.props
-
-
+        const { books, bookShelfHandler, name } = this.props
 
         return (
             <div className="bookshelf">
@@ -21,10 +19,7 @@ export default class BookShelf extends Component {
                         {books.map((book) => (
                             books.length &&
                             <li key={book.id}>
-                                <BookList book={book}
-                                    //  bookShelfHandler={this.bookShelfHandler.bind(this)}
-                                    resetMain={resetMain}
-                                />
+                                <BookList book={book} bookShelfHandler={bookShelfHandler.bind(this)} />
                             </li>
                         ))}
                     </ol>

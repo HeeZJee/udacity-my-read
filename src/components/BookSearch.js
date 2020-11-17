@@ -16,26 +16,18 @@ class BookSearch extends Component {
     queryHandler(query) {
         this.setState({ query })
 
-        BooksAPI.search(query)
-            .then(books => {
-                if (books && books.error) {
-                    this.setState({ books: [] })
-                }
-                else if (this.state.books !== books) {
-                    this.setState({ books })
-                }
-            })
+        if (!books.length) {
+            BooksAPI.search(query)
+                .then(books => {
+                    if (books && books.error) {
+                        this.setState({ books: [] })
+                    }
+                    else {
+                        this.setState({ books })
+                    }
+                })
+        }
     }
-
-    refreshResults(book, shelf) {
-        // this.setState(() => {
-        //     // this.state.books.[index].shelf = shelf;
-        //     // this.setState({ [books[index].shelf]: shelf })
-        // });
-        var index = this.state.books.indexOf(book);
-        this.setState(prevState => ({ [prevState.books[index].shelf]: shelf }))
-    }
-
 
     bookShelfHandler(book, shelf) {
         book.shelf = shelf
@@ -72,7 +64,7 @@ class BookSearch extends Component {
                         {books && !books.error
                             ? books.map((book) => (
                                 <li key={book.id}>
-                                    <BookList book={book} refreshResults={this.refreshResults.bind(this)}
+                                    <BookList book={book} bookShelfHandler={this.bookShelfHandler.bind(this)}
                                     />
                                 </li>))
                             : <p>Book Not Found!</p>}

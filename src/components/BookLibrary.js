@@ -10,21 +10,20 @@ class BookLibrary extends Component {
         books: [],
     }
 
-    getAllBooks() {
-        BooksAPI.getAll().then((res) => this.setState({ books: res }))
-
-    }
 
 
     componentDidMount() {
-        this.getAllBooks();
+        BooksAPI.getAll().then((res) => this.setState({ books: res }))
     }
 
-    resetMain() {
-        this.getAllBooks();
+    bookShelfHandler(book, shelf) {
+        book.shelf = shelf
+        BooksAPI.update(book, shelf)
+            .then(this.setState((prevState) => ({
+                books: [...prevState.books.filter((x) => x.id !== book.id), book],
+            })))
+            .catch(() => alert('Something went wrong! Please try again!'));
     }
-
-
 
     render() {
         const { books } = this.state
@@ -40,23 +39,17 @@ class BookLibrary extends Component {
                         <BookShelf
                             name="Currently Reading"
                             books={books.filter(b => b.shelf === "currentlyReading")}
-                            // bookShelfHandler={this.bookShelfHandler.bind(this)}
-                            // refreshResults={this.refreshResults.bind(this)}
-                            resetMain={this.resetMain}
+                            bookShelfHandler={this.bookShelfHandler.bind(this)}
                         />
                         <BookShelf
                             name="Want to Read"
                             books={books.filter(b => b.shelf === "wantToRead")}
-                            // bookShelfHandler={this.bookShelfHandler.bind(this)}
-                            // refreshResults={this.refreshResults.bind(this)}
-                            resetMain={this.resetMain}
+                            bookShelfHandler={this.bookShelfHandler.bind(this)}
                         />
                         <BookShelf
                             name="Read"
                             books={books.filter(b => b.shelf === "read")}
-                            // bookShelfHandler={this.bookShelfHandler.bind(this)}
-                            // refreshResults={this.refreshResults.bind(this)}
-                            resetMain={this.resetMain}
+                            bookShelfHandler={this.bookShelfHandler.bind(this)}
                         />
                     </div>
                 </div>

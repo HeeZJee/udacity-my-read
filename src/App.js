@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
-import BookLibrary from './components/BookLibrary.jsx'
-import BookSearch from './components/BookSearch.jsx'
+import BookLibrary from './components/BookLibrary.js'
+import BookSearch from './components/BookSearch.js'
 import { Route } from 'react-router'
 
 

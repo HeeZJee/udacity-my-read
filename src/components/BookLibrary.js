@@ -47,6 +47,7 @@ class BookLibrary extends Component {
                                 name={shelves[key][0]}
                                 books={books.filter(b => b.shelf === shelves[key][1])}
                                 bookShelfHandler={this.bookShelfHandler.bind(this)}
+                                key={shelves[key][1]}
                             />
                         )}
                     </div>

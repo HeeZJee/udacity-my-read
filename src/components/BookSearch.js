@@ -10,26 +10,30 @@ class BookSearch extends Component {
 
     state = {
         query: '',
-        books: []
+        books: [],
+        book: ''
     }
 
     queryHandler(query) {
         this.setState({ query })
-        if (this.state.books.length > 0) {
-            BooksAPI.search(query)
-                .then(books => {
-                    if (books && books.error) {
-                        this.setState({ books: [] })
-                    }
-                    else {
-                        this.setState({ books })
-                    }
-                })
-        }
+        BooksAPI.search(query)
+            .then(books => {
+                if (books && books.error) {
+                    this.setState({ books: [] })
+                }
+                else if (books && this.state.book.shelf && this.state.book.shelf !== '') {
+                    const newBooks = books.filter(b => (b.id !== this.state.book.id))
+                    this.setState({ books: [this.state.book, ...newBooks,] })
+                }
+                else if (this.state.books !== books) {
+                    this.setState({ books })
+                }
+            })
     }
 
     bookShelfHandler(book, shelf) {
         book.shelf = shelf
+        this.setState({ book })
         BooksAPI.update(book, shelf)
             .then(() => {
                 this.setState((prevState) => ({
@@ -60,13 +64,13 @@ class BookSearch extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {books && !books.error
-                            ? books.map((book) => (
+                        {books && !books.error &&
+                            books.map((book) => (
                                 <li key={book.id}>
                                     <BookList book={book} bookShelfHandler={this.bookShelfHandler.bind(this)}
                                     />
                                 </li>))
-                            : <p>Book Not Found!</p>}
+                        }
 
                     </ol>
                 </div>

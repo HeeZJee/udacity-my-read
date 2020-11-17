@@ -27,6 +27,13 @@ class BookLibrary extends Component {
 
     render() {
         const { books } = this.state
+        const shelves = {
+            currentlyReading: ['Currently Reading', 'currentlyReading'],
+            wantToRead: ['Want to Read', 'wantToRead'],
+            read: ['Read', 'read']
+        }
+
+
 
         return (
             <div className="list-books">
@@ -35,22 +42,13 @@ class BookLibrary extends Component {
                 </div>
                 <div className="list-books-content">
                     <div>
-
-                        <BookShelf
-                            name="Currently Reading"
-                            books={books.filter(b => b.shelf === "currentlyReading")}
-                            bookShelfHandler={this.bookShelfHandler.bind(this)}
-                        />
-                        <BookShelf
-                            name="Want to Read"
-                            books={books.filter(b => b.shelf === "wantToRead")}
-                            bookShelfHandler={this.bookShelfHandler.bind(this)}
-                        />
-                        <BookShelf
-                            name="Read"
-                            books={books.filter(b => b.shelf === "read")}
-                            bookShelfHandler={this.bookShelfHandler.bind(this)}
-                        />
+                        {Object.keys(shelves).map((key) =>
+                            <BookShelf
+                                name={shelves[key][0]}
+                                books={books.filter(b => b.shelf === shelves[key][1])}
+                                bookShelfHandler={this.bookShelfHandler.bind(this)}
+                            />
+                        )}
                     </div>
                 </div>
                 <Link to={{ pathname: "/search" }} className="open-search">Add a book</Link>

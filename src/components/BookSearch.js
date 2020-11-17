@@ -15,8 +15,7 @@ class BookSearch extends Component {
 
     queryHandler(query) {
         this.setState({ query })
-
-        if (!books.length) {
+        if (this.state.books.length > 0) {
             BooksAPI.search(query)
                 .then(books => {
                     if (books && books.error) {

@@ -19,7 +19,7 @@ export default class BookShelf extends Component {
                         {books.map((book) => (
                             books.length &&
                             <li key={book.id}>
-                                <BookList book={book} bookShelfHandler={bookShelfHandler.bind(this)} />
+                                <BookList books={books} book={book} bookShelfHandler={bookShelfHandler} />
                             </li>
                         ))}
                     </ol>

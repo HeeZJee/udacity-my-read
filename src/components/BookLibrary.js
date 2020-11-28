@@ -1,39 +1,18 @@
 import React, { Component } from 'react';
 import BookShelf from './BookShelf'
 import { Link } from 'react-router-dom';
-import * as BooksAPI from './../BooksAPI'
+import PropTypes from 'prop-types'
 
 class BookLibrary extends Component {
 
-
-    state = {
-        books: [],
-    }
-
-
-
-    componentDidMount() {
-        BooksAPI.getAll().then((res) => this.setState({ books: res }))
-    }
-
-    bookShelfHandler(book, shelf) {
-        book.shelf = shelf
-        BooksAPI.update(book, shelf)
-            .then(this.setState((prevState) => ({
-                books: [...prevState.books.filter((x) => x.id !== book.id), book],
-            })))
-            .catch(() => alert('Something went wrong! Please try again!'));
-    }
-
     render() {
-        const { books } = this.state
         const shelves = {
             currentlyReading: ['Currently Reading', 'currentlyReading'],
             wantToRead: ['Want to Read', 'wantToRead'],
             read: ['Read', 'read']
         }
 
-
+        const { bookShelfHandler, books } = this.props
 
         return (
             <div className="list-books">
@@ -46,7 +25,7 @@ class BookLibrary extends Component {
                             <BookShelf
                                 name={shelves[key][0]}
                                 books={books.filter(b => b.shelf === shelves[key][1])}
-                                bookShelfHandler={this.bookShelfHandler.bind(this)}
+                                bookShelfHandler={bookShelfHandler}
                                 key={shelves[key][1]}
                             />
                         )}
@@ -56,6 +35,10 @@ class BookLibrary extends Component {
             </div>
         );
     }
+}
+BookLibrary.propTypes = {
+    books: PropTypes.arrayOf(PropTypes.object).isRequired,
+    bookShelfHandler: PropTypes.func.isRequired,
 }
 
 

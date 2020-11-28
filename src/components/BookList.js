@@ -18,10 +18,20 @@ class BookList extends Component {
         }
     }
 
-    render() {
-        const { book, bookShelfHandler } = this.props
 
-        this.switchShelfName()
+
+    render() {
+        const { book, bookShelfHandler, books } = this.props
+
+        let currentShelf = 'none';
+
+        for (let item of books) {
+            if (item.id === book.id) {
+                currentShelf = item.shelf;
+                break;
+            }
+        }
+
         const imageThumb = book.imageLinks ? book.imageLinks.smallThumbnail : null;
 
         return (
@@ -29,7 +39,7 @@ class BookList extends Component {
                 <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${imageThumb})` }}></div>
                     <div className="book-shelf-changer">
-                        <select value={book.shelf || 'none'} onChange={(e) => bookShelfHandler(book, e.target.value)}>
+                        <select onChange={(e) => bookShelfHandler(book, e.target.value)} defaultValue={currentShelf}>
                             <option value="move" disabled>Move to...</option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>

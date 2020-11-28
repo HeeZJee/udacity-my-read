@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import BookList from './BookList';
 import * as BooksAPI from './../BooksAPI'
 import { Link } from 'react-router-dom'
@@ -10,44 +10,33 @@ class BookSearch extends Component {
 
     state = {
         query: '',
-        books: [],
-        book: ''
+        searchedBooks: [],
     }
+
 
     queryHandler(query) {
         this.setState({ query })
-        BooksAPI.search(query)
-            .then(books => {
-                if (books && books.error) {
-                    this.setState({ books: [] })
-                }
-                else if (books && this.state.book.shelf && this.state.book.shelf !== '') {
-                    const newBooks = books.filter(b => (b.id !== this.state.book.id))
-                    this.setState({ books: [this.state.book, ...newBooks,] })
-                }
-                else if (this.state.books !== books) {
-                    this.setState({ books })
-                }
-            })
+        if (query) {
+            BooksAPI.search(query)
+                .then(books => {
+                    books.length && books.error
+                        ? this.setState({ newBooks: [] })
+                        : this.setState({ newBooks: books })
+
+                })
+        }
+        else {
+            this.setState({ searchedBooks: [] })
+        }
     }
 
-    bookShelfHandler(book, shelf) {
-        book.shelf = shelf
-        this.setState({ book })
-        BooksAPI.update(book, shelf)
-            .then(() => {
-                this.setState((prevState) => ({
-                    books: [...prevState.books],
-                }))
-                if (shelf !== 'none') { alert(`${book.title} has been added to your shelf!`) }
-            })
-            .catch(() => alert('Something went wrong! Please try again!'));
-
-    }
 
 
     render() {
-        const { query, books } = this.state
+
+        const { query, newBooks } = this.state
+        const { bookShelfHandler, books } = this.props
+
 
 
         return (
@@ -64,10 +53,10 @@ class BookSearch extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {books && !books.error &&
-                            books.map((book) => (
+                        {newBooks && !newBooks.error &&
+                            newBooks.map((book) => (
                                 <li key={book.id}>
-                                    <BookList book={book} bookShelfHandler={this.bookShelfHandler.bind(this)}
+                                    <BookList book={book} books={books} bookShelfHandler={bookShelfHandler}
                                     />
                                 </li>))
                         }
@@ -78,6 +67,12 @@ class BookSearch extends Component {
         );
     }
 }
+
+BookSearch.propTypes = {
+    books: PropTypes.arrayOf(PropTypes.object).isRequired,
+    bookShelfHandler: PropTypes.func.isRequired,
+}
+
 
 
 
